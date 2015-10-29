@@ -1,0 +1,158 @@
+<?php
+require_once 'functions.php';
+$user = new User();
+
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin']) ){
+	
+	$res = $user->login($_POST);
+	
+	if($res != 0 && $res != ''){
+		$_SESSION['user_id'] = $res;
+		$_SESSION['email_id'] = $_POST['email'];
+		header('location:php_script.php');
+	} else {
+		header('location:/');
+	}
+}
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup']) ){
+?>
+	<div  style="margin:0 auto;width:300px;">
+	<?php 
+		array_walk($_POST, 'validate');
+		$res = $user->register($_POST);
+		if($res == 1){
+			$msg = 'Your Registration has been Successfully done.Please Check your mail for activation.(You may also check for the email in SPAM folder if u do not see it in inbox )';
+			$class = 'alert-success';
+		}
+}
+?>
+</div>
+<?php require_once 'includes/header.php';?>
+<div class=" main-body navbar-wrapper">
+
+    <div class="container">
+    <?php if(isset($msg) && $msg != '') { ?><div class="alert <?php echo $class?>" role="alert"><?php echo $msg; ?> </div> <?php } ?>
+      <div class="row">
+      <div class="col-lg-8  starter-template ">
+        <h1>Bootstrap starter template</h1>
+        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+      </div>
+      <div class="signin-form col-lg-4">
+      <div id="slogins">
+		 	      
+	      <a href="javascript:void(0);" onclick="fb_login();" style="background-image:url('img/SocialLogin.png')" ></a>
+	      <?php include('slogins/gplus/gplus_login.php');?>
+	    <!--   <a href="slogins/tlogin/login-twitter.php" style="background-image:url('img/SocialLogin.png');background-position:0px" ></a>
+	      <a href="slogins/mlogin/microsoft_login.php" style="background-image:url('img/SocialLogin.png');background-position:-2px -124px;" ></a>
+	      -->
+	    </div>
+      	<div class="signin ">
+             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" id="login-form1">
+                     <input class="form-control " type="text" placeholder="Your E-mail" name="email" id="email">
+                      <input type="password" class="form-control" placeholder="Password" name="pwd" id="pwd">
+                   <div class="form-group">
+                       <button type="submit" class="btn btn-block btn-info" name="signin">Sign In</button>
+                  </div>
+              </form>
+          </div>
+          
+          </div>
+          
+      </div>
+    </div>	
+</div>   
+<!-- passionybr2003@gmail.com -->
+<?php require_once 'includes/footer.php';?>
+
+
+<script type="text/javascript">
+
+  window.fbAsyncInit = function() {
+	  FB.init({
+	    appId      : '822084744490895',
+	    cookie     : true,  // enable cookies to allow the server to access 
+	                        // the session
+	    xfbml      : true,  // parse social plugins on this page
+	    version    : 'v2.1' // use version 2.1
+	  });
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  // Custom code  
+  function fb_login(){
+    FB.login(function(response) {
+
+        if (response.authResponse) {
+            access_token = response.authResponse.accessToken; //get access token
+            user_id = response.authResponse.userID; //get FB UID
+//            FB.ui({
+//                method: 'feed', 
+//                name: 'Takescript.in',
+//                link: 'http://takescript.in',
+//                picture: '',
+//                caption: 'your forms our downloads',
+//                description: ''
+//            },
+//            function(response) {
+//                if (response && response.post_id) {
+//                    alert('Post was published.');
+//                  } else {
+//                    alert('Post was not published.');
+//                  }
+//                });
+          
+            console.clear();
+            FB.api('/me',  function(response) {
+            	var data = {method:'fb_reg',fb_id:response['id'],email:response['email'],name:response['name'],first_name:response['first_name'],last_name:response['last_name'],gender:response['gender'],birthday:response['birthday'] };
+				$.ajax({
+					 type:"post",
+					 url: "/functions.php",
+					 data: data,
+					 success:function(url) {
+						
+						 if(url != ''){
+							window.location = url;  
+						} 
+							
+					 }
+				});				
+            });
+           
+        } else {
+            console.log('User cancelled login or did not fully authorize.');
+        }
+    }, {
+        scope: 'public_profile,email,read_friendlists,manage_friendlists,user_friends,publish_stream,user_likes, offline_access'
+    });
+}
+
+  
+/* Share method*/
+//  FB.ui(
+//		  {
+//		    method: 'share',
+//		    href: 'https://developers.facebook.com/docs/',
+//		  },
+//		  function(response) {
+//		    if (response && !response.error_code) {
+//		      alert('Posting completed.');
+//		    } else {
+//		      alert('Error while posting.');
+//		    }
+//		  }
+//		);
+  
+
+</script>
+
+
+
+

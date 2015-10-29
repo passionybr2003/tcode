@@ -1,0 +1,23 @@
+.main-body {color:white;padding-top:20px;padding-bottom:20px;}
+.signin{clear:both;}
+.container .text-muted {margin: 20px 0;text-align:center;}
+.main-body1{background-color:#18bc9c;}
+.footer {background-color:#34495e;position: absolute;width: 100%;height: 60px; }
+
+.div2 {
+-webkit-box-shadow: 0px 0px 15px 5px rgba(0, 185, 233, .75);
+box-shadow: 0px 0px 15px  #fff;
+-webkit-transition: all 0.7s ease;
+transition: all 0.7s ease;
+}
+
+.div3 {
+-webkit-box-shadow: 0px 0px 15px 5px rgba(0, 185, 233, .75);
+box-shadow: 0px 0px 15px  #000;
+-webkit-transition: all 0.7s ease;
+transition: all 0.7s ease;
+}
+.effect8{
+	background-color:#F3F6FA;
+	padding:2em;
+} 
